@@ -3,6 +3,7 @@ import { fromJS, List } from 'immutable';
 import { HIRES_WIDTH, HIRES_BYTE_WIDTH, HIRES_HEIGHT, Colors, COLOR_COLORS, MONO_COLORS, ColorCodes } from '../Constants';
 import { HiresRowRecord } from '../Records';
 import HiresRow from './HiresRow';
+import SelectorBox from './SelectorBox';
 
 export default class HiresContainer extends PureComponent {
   constructor(props) {
@@ -105,6 +106,7 @@ export default class HiresContainer extends PureComponent {
           <span>Color/Mono: <input type="checkbox" checked={color} onChange={this.onToggleColor} /></span>
           <span>Color: {this.renderColorOptions()} </span>
         </div>
+        <SelectorBox data={data} color={color} dragging={dragging}/>
         {[...Array(HIRES_HEIGHT).keys()].map(row => (
           <HiresRow
             key={row}
