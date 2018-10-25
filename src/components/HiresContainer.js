@@ -109,6 +109,8 @@ export default class HiresContainer extends PureComponent {
           <HiresRow
             key={row}
             data={data.get(row)}
+            start={0}
+            width={HIRES_WIDTH}
             onClick={this.drawSelectedColor.bind(this, row)}
             scale={2}
             color={color}

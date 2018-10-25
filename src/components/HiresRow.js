@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import {
-  HIRES_WIDTH,
   HIRES_VIOLET,
   HIRES_GREEN,
   HIRES_WHITE,
@@ -18,6 +17,8 @@ export default class HiresRow extends PureComponent {
     onClick: PropTypes.func.isRequired,
     color: PropTypes.bool.isRequired,
     dragging: PropTypes.bool.isRequired,
+    start: PropTypes.number.isRequired,
+    width: PropTypes.number.isRequired,
   }
 
   componentDidMount() {
@@ -54,25 +55,27 @@ export default class HiresRow extends PureComponent {
 
   clearCanvas() {
     const { canvas } = this.refs;
+    const { width } = this.props;
     const ctx = canvas.getContext('2d');
     
     ctx.fillStyle = 'black';
-    ctx.fillRect(0, 0, HIRES_WIDTH, 1);
+    ctx.fillRect(0, 0, width, 1);
   }
 
   drawRect(color, x) {
     const { canvas } = this.refs;
+    const { start } = this.props;
     const ctx = canvas.getContext('2d');
     
     ctx.fillStyle = color;
-    ctx.fillRect(x, 0, 1, 1);
+    ctx.fillRect(x - start, 0, 1, 1);
   }
 
   drawHiresColor() {
-    const { data: {pixels, offsets} } = this.props;
+    const { data: {pixels, offsets}, start, width } = this.props;
     this.clearCanvas();
 
-    for (let i = 0; i < HIRES_WIDTH; i++) {
+    for (let i = start; i < width; i++) {
       const even = i % 2 === 0;
       const pair = even ? [pixels.get(i), pixels.get(i+1)] : [pixels.get(i-1), pixels.get(i)];
       switch (pair.toString()) {
@@ -97,10 +100,10 @@ export default class HiresRow extends PureComponent {
   }
 
   drawHiresMono(){
-    const { data: {pixels} } = this.props;
+    const { data: {pixels}, start, width } = this.props;
     this.clearCanvas();
     
-    for (let i = 0; i < HIRES_WIDTH; i++) {
+    for (let i = start; i < width; i++) {
       const bit = pixels.get(i);
       if (bit) {
         this.drawRect(MONO, i);
@@ -117,15 +120,15 @@ export default class HiresRow extends PureComponent {
   }
 
   render() {
-    const { scale } = this.props;
+    const { scale, width } = this.props;
     return (
       <canvas 
         ref="canvas" 
         height={1} 
-        width={HIRES_WIDTH} 
+        width={width} 
         style={{
           height: scale,
-          width: HIRES_WIDTH*scale,
+          width: width*scale,
           display: 'block',
         }}
       />
