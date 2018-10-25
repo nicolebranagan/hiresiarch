@@ -15,13 +15,15 @@ export default class HiresRow extends PureComponent {
   static propTypes = {
     scale: PropTypes.number.isRequired,
     data: PropTypes.instanceOf(HiresRowRecord).isRequired,
-    onClick: PropTypes.func.isRequired, // onClick(dataIndex)
+    onClick: PropTypes.func.isRequired,
     color: PropTypes.bool.isRequired,
+    dragging: PropTypes.bool.isRequired,
   }
 
   componentDidMount() {
     const { canvas } = this.refs;
     canvas.addEventListener('click', this.onClick);
+    canvas.addEventListener('mousemove', this.onMouseMove);
 
     this.drawHires();
   }
@@ -29,10 +31,17 @@ export default class HiresRow extends PureComponent {
   componentWillUnmount() {
     const { canvas } = this.refs;
     canvas.removeEventListener('click', this.onClick);
+    canvas.removeEventListener('mousemove', this.onMouseMove);
   }
 
-  componentDidUpdate(lastProps) {
+  componentDidUpdate() {
     this.drawHires();
+  }
+
+  onMouseMove = (event) => {
+    if (this.props.dragging) {
+      this.onClick(event);
+    }
   }
 
   onClick = (event) => {
@@ -51,44 +60,38 @@ export default class HiresRow extends PureComponent {
     ctx.fillRect(0, 0, HIRES_WIDTH, 1);
   }
 
-  drawRect(color, x, width) {
+  drawRect(color, x) {
     const { canvas } = this.refs;
     const ctx = canvas.getContext('2d');
     
     ctx.fillStyle = color;
-    ctx.fillRect(x, 0, width, 1);
+    ctx.fillRect(x, 0, 1, 1);
   }
 
   drawHiresColor() {
     const { data: {pixels, offsets} } = this.props;
     this.clearCanvas();
 
-    let pair = [];
-    let drawPos = 0;
     for (let i = 0; i < HIRES_WIDTH; i++) {
-      const bit = pixels.get(i);
-      pair.push(bit);
-      if (pair.length === 2) {
-        switch (pair.toString()) {
-          case "0,1": {
-            const offset = offsets.get(Math.floor(i/7));
-            this.drawRect(offset ? HIRES_BLUE : HIRES_VIOLET, drawPos, 2);
-            break;
-          }
-          case "1,0": {
-            const offset = offsets.get(Math.floor((i+1)/7));
-            this.drawRect(offset ? HIRES_ORANGE : HIRES_GREEN, drawPos, 2);
-            break;
-          }
-          case "1,1": {
-            this.drawRect(HIRES_WHITE, drawPos, 2);
-            break;
-          }
-          default:
-            break;
+      const even = i % 2 === 0;
+      const pair = even ? [pixels.get(i), pixels.get(i+1)] : [pixels.get(i-1), pixels.get(i)];
+      switch (pair.toString()) {
+        case "0,1": {
+          const offset = offsets.get(Math.floor(i/7));
+          this.drawRect(offset ? HIRES_BLUE : HIRES_VIOLET, i);
+          break;
         }
-        drawPos += 2;
-        pair = [];
+        case "1,0": {
+          const offset = offsets.get(Math.floor((i+1)/7));
+          this.drawRect(offset ? HIRES_ORANGE : HIRES_GREEN, i);
+          break;
+        }
+        case "1,1": {
+          this.drawRect(HIRES_WHITE, i, 2);
+          break;
+        }
+        default:
+          break;
       }
     }
   }
@@ -100,7 +103,7 @@ export default class HiresRow extends PureComponent {
     for (let i = 0; i < HIRES_WIDTH; i++) {
       const bit = pixels.get(i);
       if (bit) {
-        this.drawRect(MONO, i, 1);
+        this.drawRect(MONO, i);
       }
     }
   }

@@ -15,7 +15,26 @@ export default class HiresContainer extends PureComponent {
       }))),
       color: true,
       selectedColor: Colors.WHITE,
+      dragging: false,
     };
+  }
+
+  componentDidMount() {
+    document.addEventListener('mousedown', this.onMouseDown);
+    document.addEventListener('mouseup', this.onMouseUp);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('mousedown', this.onMouseDown);
+    document.removeEventListener('mouseup', this.onMouseUp);
+  }
+
+  onMouseDown = () => {
+    this.setState({dragging: true});
+  }
+
+  onMouseUp = () => {
+    this.setState({dragging: false});
   }
 
   onToggleColor = (event) => {
@@ -25,7 +44,7 @@ export default class HiresContainer extends PureComponent {
     });
   }
 
-  onClick(row, column) {
+  drawSelectedColor(row, column) {
     const { data, selectedColor, color } = this.state;
     if (color) {
       // Essentially, we treat the resolution in color mode as having halved
@@ -78,7 +97,7 @@ export default class HiresContainer extends PureComponent {
   }
 
   render() {
-    const { data, color } = this.state;
+    const { data, color, dragging } = this.state;
 
     return (
       <div>
@@ -90,9 +109,10 @@ export default class HiresContainer extends PureComponent {
           <HiresRow
             key={row}
             data={data.get(row)}
-            onClick={this.onClick.bind(this, row)}
+            onClick={this.drawSelectedColor.bind(this, row)}
             scale={2}
             color={color}
+            dragging={dragging}
           />
         ))}
       </div>
