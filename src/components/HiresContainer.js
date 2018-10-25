@@ -7,8 +7,15 @@ export default class HiresContainer extends PureComponent {
     super(props);
 
     this.state = {
-      data: Array(HIRES_HEIGHT).fill(Array(HIRES_BYTE_WIDTH).fill(0))
+      data: Array(HIRES_HEIGHT).fill(Array(HIRES_BYTE_WIDTH).fill(0)),
+      color: true,
     };
+  }
+
+  onToggleColor = (event) => {
+    this.setState({
+      color: event.target.checked,
+    });
   }
 
   onClick(row, column) {
@@ -25,16 +32,20 @@ export default class HiresContainer extends PureComponent {
   }
 
   render() {
-    const { data } = this.state;
+    const { data, color } = this.state;
 
     return (
       <div>
+        <div>
+          Color: <input type="checkbox" checked={color} onChange={this.onToggleColor} />
+        </div>
         {[...Array(HIRES_HEIGHT).keys()].map(row => (
           <HiresRow
             key={row}
             data={data[row]}
             onClick={this.onClick.bind(this, row)}
             scale={9}
+            color={color}
           />
         ))}
       </div>

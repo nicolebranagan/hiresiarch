@@ -6,3 +6,4 @@ export const HIRES_GREEN = "#00FF00";
 export const HIRES_WHITE = "#FFFFFF";
 export const HIRES_BLUE = "#0055FF";
 export const HIRES_ORANGE = "#FF5500";
+export const MONO = "#00DD00";

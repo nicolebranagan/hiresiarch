@@ -7,6 +7,7 @@ import {
   HIRES_WHITE,
   HIRES_BLUE,
   HIRES_ORANGE,
+  MONO,
 } from '../Constants';
 
 export default class HiresRow extends PureComponent {
@@ -14,6 +15,7 @@ export default class HiresRow extends PureComponent {
     scale: PropTypes.number.isRequired,
     data: PropTypes.array.isRequired,
     onClick: PropTypes.func.isRequired, // onClick(dataIndex)
+    color: PropTypes.bool.isRequired,
   }
 
   componentDidMount() {
@@ -29,7 +31,7 @@ export default class HiresRow extends PureComponent {
   }
 
   componentDidUpdate(lastProps) {
-    if (lastProps.data !== this.props.data) {
+    if (lastProps.data !== this.props.data || lastProps.color !== this.props.color) {
       this.drawHires();
     }
   }
@@ -58,7 +60,7 @@ export default class HiresRow extends PureComponent {
     ctx.fillRect(x, 0, width, 1);
   }
 
-  drawHires() {
+  drawHiresColor() {
     const { data } = this.props;
     this.clearCanvas();
     
@@ -93,6 +95,30 @@ export default class HiresRow extends PureComponent {
           pair = [];
         }
       }
+    }
+  }
+
+  drawHiresMono(){
+    const { data } = this.props;
+    this.clearCanvas();
+    
+    let drawPos = 0;
+    for (let i = 0; i < data.length; i++) {
+      const bit = data[i];
+      if (i % 8 !== 0) {
+        if (bit) {
+          this.drawRect(MONO, drawPos, 1);
+        }
+        drawPos += 1;
+      }
+    }
+  }
+
+  drawHires() {
+    if (this.props.color) {
+      this.drawHiresColor();
+    } else {
+      this.drawHiresMono();
     }
   }
 
