@@ -13,8 +13,8 @@ export default ({
       left: x*scale,
       top: y*scale,
       border: '1px solid grey',
-      width: width-1,
-      height: height-1,
+      width: scale*width-1,
+      height: scale*height-1,
     }}
   />)
 };

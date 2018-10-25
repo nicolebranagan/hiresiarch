@@ -2,8 +2,8 @@ import React, { PureComponent } from 'react';
 import { fromJS, List } from 'immutable';
 import { HIRES_WIDTH, HIRES_BYTE_WIDTH, HIRES_HEIGHT, Colors, COLOR_COLORS, MONO_COLORS, ColorCodes } from '../Constants';
 import { HiresRowRecord } from '../Records';
-import HiresRow from './HiresRow';
 import SelectorBox from './SelectorBox';
+import DrawingBox from './DrawingBox';
 
 export default class HiresContainer extends PureComponent {
   constructor(props) {
@@ -17,6 +17,8 @@ export default class HiresContainer extends PureComponent {
       color: true,
       selectedColor: Colors.WHITE,
       dragging: false,
+      startx: 0,
+      starty: 0,
     };
   }
 
@@ -45,7 +47,12 @@ export default class HiresContainer extends PureComponent {
     });
   }
 
-  drawSelectedColor(row, column) {
+  setXY = (y, x) => {
+    console.log(y, x)
+    this.setState({startx: x, starty: y});
+  }
+
+  drawSelectedColor = (row, column) => {
     const { data, selectedColor, color } = this.state;
     if (color) {
       // Essentially, we treat the resolution in color mode as having halved
@@ -98,7 +105,7 @@ export default class HiresContainer extends PureComponent {
   }
 
   render() {
-    const { data, color, dragging } = this.state;
+    const { data, color, dragging, startx, starty } = this.state;
 
     return (
       <div>
@@ -106,19 +113,22 @@ export default class HiresContainer extends PureComponent {
           <span>Color/Mono: <input type="checkbox" checked={color} onChange={this.onToggleColor} /></span>
           <span>Color: {this.renderColorOptions()} </span>
         </div>
-        <SelectorBox data={data} color={color} dragging={dragging}/>
-        {[...Array(HIRES_HEIGHT).keys()].map(row => (
-          <HiresRow
-            key={row}
-            data={data.get(row)}
-            start={0}
-            width={HIRES_WIDTH}
-            onClick={this.drawSelectedColor.bind(this, row)}
-            scale={2}
-            color={color}
-            dragging={dragging}
-          />
-        ))}
+        <SelectorBox 
+          data={data} 
+          color={color} 
+          dragging={dragging}
+          x={startx} 
+          y={starty} 
+          setXY={this.setXY} 
+        />
+        <DrawingBox 
+          data={data} 
+          color={color} 
+          dragging={dragging} 
+          startx={startx} 
+          starty={starty} 
+          drawSelectedColor={this.drawSelectedColor} 
+        />
       </div>
     );
   }

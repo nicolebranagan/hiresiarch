@@ -66,7 +66,7 @@ export default class HiresRow extends PureComponent {
     const { canvas } = this.refs;
     const { start } = this.props;
     const ctx = canvas.getContext('2d');
-    
+
     ctx.fillStyle = color;
     ctx.fillRect(x - start, 0, 1, 1);
   }
@@ -75,7 +75,7 @@ export default class HiresRow extends PureComponent {
     const { data: {pixels, offsets}, start, width } = this.props;
     this.clearCanvas();
 
-    for (let i = start; i < width; i++) {
+    for (let i = start; i < (start+width); i++) {
       const even = i % 2 === 0;
       const pair = even ? [pixels.get(i), pixels.get(i+1)] : [pixels.get(i-1), pixels.get(i)];
       switch (pair.toString()) {
@@ -103,7 +103,7 @@ export default class HiresRow extends PureComponent {
     const { data: {pixels}, start, width } = this.props;
     this.clearCanvas();
     
-    for (let i = start; i < width; i++) {
+    for (let i = start; i < (start+width); i++) {
       const bit = pixels.get(i);
       if (bit) {
         this.drawRect(MONO, i);
