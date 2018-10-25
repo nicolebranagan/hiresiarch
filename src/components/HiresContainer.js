@@ -34,7 +34,7 @@ export default class HiresContainer extends PureComponent {
       const codes = ColorCodes[selectedColor];
       if (selectedColor === Colors.VIOLET || selectedColor === Colors.GREEN) {
         newData[row][byte] = 0;
-      } else if (selectedColor === Colors.VIOLET || selectedColor === Colors.GREEN) {
+      } else if (selectedColor === Colors.BLUE || selectedColor === Colors.ORANGE) {
         newData[row][byte] = 1;
       }
       newData[row][byteOffset] = codes[0];
@@ -42,7 +42,7 @@ export default class HiresContainer extends PureComponent {
       if ((byteOffset + 1) % 8 === 0) {
         if (selectedColor === Colors.VIOLET || selectedColor === Colors.GREEN) {
           newData[row][byteOffset+1] = 0;
-        } else if (selectedColor === Colors.VIOLET || selectedColor === Colors.GREEN) {
+        } else if (selectedColor === Colors.BLUE || selectedColor === Colors.ORANGE) {
           newData[row][byteOffset+1] = 1;
         }
         newData[row][byteOffset+2] = codes[1];
