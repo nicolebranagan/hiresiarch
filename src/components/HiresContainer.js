@@ -48,8 +48,10 @@ export default class HiresContainer extends PureComponent {
   }
 
   setXY = (y, x) => {
-    console.log(y, x)
-    this.setState({startx: x, starty: y});
+    const startx = ((x / 7) | 0) * 7;
+    const starty = ((y / 8) | 0) * 8;
+
+    this.setState({startx, starty});
   }
 
   drawSelectedColor = (row, column) => {
