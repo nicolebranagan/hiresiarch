@@ -1,12 +1,13 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-
-const HIRES_WIDTH = 280;
-const HIRES_VIOLET = "#FF00FF";
-const HIRES_GREEN = "#00FF00";
-const HIRES_WHITE = "#FFFFFF";
-const HIRES_BLUE = "#0055FF";
-const HIRES_ORANGE = "#FF5500";
+import {
+  HIRES_WIDTH,
+  HIRES_VIOLET,
+  HIRES_GREEN,
+  HIRES_WHITE,
+  HIRES_BLUE,
+  HIRES_ORANGE,
+} from '../Constants';
 
 export default class HiresRow extends PureComponent {
   static propTypes = {
@@ -16,7 +17,15 @@ export default class HiresRow extends PureComponent {
   }
 
   componentDidMount() {
+    const { canvas } = this.refs;
+    canvas.addEventListener('click', this.onClick);
+
     this.drawHires();
+  }
+
+  componentWillUnmount() {
+    const { canvas } = this.refs;
+    canvas.removeEventListener('click', this.onClick);
   }
 
   componentDidUpdate(lastProps) {
@@ -25,8 +34,12 @@ export default class HiresRow extends PureComponent {
     }
   }
 
-  onClick() {
-
+  onClick = (event) => {
+    const { canvas } = this.refs;
+    const { scale, onClick } = this.props;
+    const rect = canvas.getBoundingClientRect();
+    const x = Math.floor((event.clientX - rect.left) / scale);
+    onClick(x);
   }
 
   clearCanvas() {
