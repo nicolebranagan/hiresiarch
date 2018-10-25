@@ -23,9 +23,9 @@ export default class HiresContainer extends PureComponent {
   onClick(row, column) {
     const { data, selectedColor, color } = this.state;
     if (color) {
+      // Essentially, we treat the resolution in color mode as having halved
       column = Math.floor(column / 2) * 2;
     }
-    console.log(column);
     const byte = Math.floor(column / 7) * 8;
     const byteOffset = byte + column % 7 + 1;
     const newData = [...data];
