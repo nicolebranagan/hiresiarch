@@ -47,5 +47,11 @@ export default data => {
   });
   const screenHole = [0, 0, 0, 0, 0, 0, 0, 0];
   const grandArray = rawBlocks.reduce((prev, curr) => [...prev, ...curr, ...screenHole], []);
-  saveAs(new Blob(new Uint8Array(grandArray)), "screen.dat");
+  let grandOutput = '';
+  for (let i = 0; i < (grandArray.length / 16); i++) {
+    const subset = grandArray.slice(i*16, (i+1)*16);
+    const dataString = ".byte " + subset.map(num => `$${num.toString(16)}`).join(', ') + '\n';
+    grandOutput += dataString;
+  }
+  saveAs(new Blob([grandOutput], {type: 'application/octet-stream'}), "screen.dat");
 };
