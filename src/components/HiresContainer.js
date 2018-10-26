@@ -1,9 +1,10 @@
 import React, { PureComponent } from 'react';
 import { fromJS, List } from 'immutable';
-import { HIRES_WIDTH, HIRES_BYTE_WIDTH, HIRES_HEIGHT, Colors, COLOR_COLORS, MONO_COLORS, ColorCodes } from '../Constants';
+import { HIRES_WIDTH, HIRES_BYTE_WIDTH, HIRES_HEIGHT, Colors, ColorCodes } from '../Constants';
 import { HiresRowRecord } from '../Records';
 import SelectorBox from './SelectorBox';
 import DrawingBox from './DrawingBox';
+import ControlRow from './ControlRow';
 
 export default class HiresContainer extends PureComponent {
   constructor(props) {
@@ -87,34 +88,11 @@ export default class HiresContainer extends PureComponent {
     });
   }
 
-  renderColorOptions() {
-    const { color, selectedColor } = this.state;
-    const map = color ? COLOR_COLORS : MONO_COLORS;
-    return (
-      <span>
-        {map.map(color => <span key={color}>
-          <input 
-            type='radio' 
-            name='colorSelect' 
-            value={color} 
-            checked={color === selectedColor}
-            onChange={(e) => this.setState({selectedColor: e.target.value})}
-          />
-          {color}
-        </span>)}
-      </span>
-    )
-  }
-
   render() {
-    const { data, color, dragging, startx, starty } = this.state;
+    const { data, color, dragging, startx, starty, selectedColor } = this.state;
 
     return (
       <div>
-        <div>
-          <span>Color/Mono: <input type="checkbox" checked={color} onChange={this.onToggleColor} /></span>
-          <span>Color: {this.renderColorOptions()} </span>
-        </div>
         <SelectorBox 
           data={data} 
           color={color} 
@@ -130,6 +108,12 @@ export default class HiresContainer extends PureComponent {
           startx={startx} 
           starty={starty} 
           drawSelectedColor={this.drawSelectedColor} 
+        />
+        <ControlRow
+          color={color}
+          selectedColor={selectedColor}
+          setSelectedColor={selectedColor => this.setState({selectedColor})}
+          onToggleColor={this.onToggleColor}
         />
       </div>
     );
