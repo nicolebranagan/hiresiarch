@@ -5,6 +5,7 @@ import { HiresRowRecord } from '../Records';
 import SelectorBox from './SelectorBox';
 import DrawingBox from './DrawingBox';
 import ControlRow from './ControlRow';
+import SaveScreenData from '../utils/SaveScreenData';
 
 export default class HiresContainer extends PureComponent {
   constructor(props) {
@@ -93,6 +94,9 @@ export default class HiresContainer extends PureComponent {
 
     return (
       <div>
+        <div>
+          <button onClick={() => {SaveScreenData(data)}}>Save</button>
+        </div>
         <SelectorBox 
           data={data} 
           color={color} 
