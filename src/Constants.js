@@ -41,3 +41,8 @@ export const ColorCodes = {
   [Colors.ORANGE]: [1, 0],
   [Colors.BLACK]: [0, 0],
 };
+
+export const HIRES_OFFSETS = [];
+// Sourced from https://github.com/Michaelangel007/apple2_hgr_font_tutorial
+for( var y = 0; y < 193; ++y )
+  HIRES_OFFSETS[ y ] = ((y/64)|0)*0x28 + ((y%8)|0)*0x400 + ((y/8)&7)*0x80;

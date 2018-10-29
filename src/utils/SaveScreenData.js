@@ -1,37 +1,32 @@
 import saveAs from 'file-saver';
-
-const screenHole = [0, 0, 0, 0, 0, 0, 0, 0];
+import { HIRES_OFFSETS } from '../Constants';
 
 export default data => {
   const rawRows = data.map(({pixels, offsets}) => {
     const output = [];
     for (let i = 0; i < offsets.size; i++) {
-      const byteOut = []
       const outputByte = offsets.get(i) ? 1 : 0;
-      byteOut.push(outputByte);
-      pixels.toArray().slice(i*7, (i+1)*7).reverse().forEach(byte => byteOut.push(byte));
-      output.push(parseInt(byteOut.join(''), 2));
+      const pixelBytes = pixels.slice(i*7, (i+1)*7).reverse().toArray();
+      output.push(parseInt([outputByte, ...pixelBytes].join(''), 2));
     }
     return output;
   }).toArray();
 
-  const rawBlocks = [...Array(8).keys()].flatMap(box1 => [...Array(8).keys()].map(box2 => {
+  const grandArray = Array(8192).fill(9);
+  for (let i = 0; i < 192; i++) {
+    const rowToInsert = rawRows[i];
+    const removedItems = grandArray.splice(HIRES_OFFSETS[i], rowToInsert.length, ...rowToInsert);
+    if (removedItems.length !== rowToInsert.length) {
+      throw new Error("Couldn't build grandArray")
+    }
+  }
 
-    return [
-      ...rawRows[box1+box2*8],
-      ...rawRows[(box1+box2*8)+64],
-      ...rawRows[(box1+box2*8)+128],
-      ...screenHole
-    ]
-  }));
-
-  const grandArray = rawBlocks.reduce((prev, curr) => [...prev, ...curr], []);
   let grandOutput = '';
   for (let i = 0; i < (grandArray.length / 16); i++) {
     const subset = grandArray.slice(i*16, (i+1)*16);
     const dataString = ".byte " + subset.map(num => `$${num.toString(16)}`).join(', ') + '\n';
     grandOutput += dataString;
   }
-  console.log(grandArray.length)
-  saveAs(new Blob([grandOutput], {type: 'application/octet-stream'}), "screen.dat");
+  console.log(grandArray, grandArray.length)
+  //saveAs(new Blob([grandOutput], {type: 'application/octet-stream'}), "screen.dat");
 };
