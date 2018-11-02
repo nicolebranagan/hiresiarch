@@ -35,10 +35,10 @@ export const MONO_COLORS = [
 
 export const ColorCodes = {
   [Colors.WHITE]: [1, 1],
-  [Colors.VIOLET]: [0, 1],
-  [Colors.GREEN]: [1, 0],
-  [Colors.BLUE]: [0, 1],
-  [Colors.ORANGE]: [1, 0],
+  [Colors.VIOLET]: [1, 0],
+  [Colors.GREEN]: [0, 1],
+  [Colors.BLUE]: [1, 0],
+  [Colors.ORANGE]: [0, 1],
   [Colors.BLACK]: [0, 0],
 };
 

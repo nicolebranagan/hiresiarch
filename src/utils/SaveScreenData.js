@@ -27,6 +27,5 @@ export default data => {
     const dataString = ".byte " + subset.map(num => `$${num.toString(16)}`).join(', ') + '\n';
     grandOutput += dataString;
   }
-  console.log(grandArray, grandArray.length)
-  //saveAs(new Blob([grandOutput], {type: 'application/octet-stream'}), "screen.dat");
+  saveAs(new Blob([grandOutput], {type: 'application/octet-stream'}), "screen.dat");
 };

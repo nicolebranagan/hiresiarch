@@ -76,25 +76,25 @@ export default class HiresRow extends PureComponent {
     this.clearCanvas();
 
     for (let i = start; i < (start+width); i++) {
-      const even = i % 2 === 0;
-      const pair = even ? [pixels.get(i), pixels.get(i+1)] : [pixels.get(i-1), pixels.get(i)];
-      switch (pair.toString()) {
-        case "0,1": {
-          const offset = offsets.get(Math.floor(i/7));
-          this.drawRect(offset ? HIRES_BLUE : HIRES_VIOLET, i);
-          break;
+      if (pixels.get(i) && (pixels.get(i+1) || pixels.get(i-1))) {
+        this.drawRect(HIRES_WHITE, i);
+      } else {
+        const even = i % 2 === 0;
+        const pair = even ? [pixels.get(i), pixels.get(i+1)] : [pixels.get(i-1), pixels.get(i)];
+        switch (pair.toString()) {
+          case "1,0": {
+            const offset = offsets.get(Math.floor(i/7));
+            this.drawRect(offset ? HIRES_BLUE : HIRES_VIOLET, i);
+            break;
+          }
+          case "0,1": {
+            const offset = offsets.get(Math.floor((i+1)/7));
+            this.drawRect(offset ? HIRES_ORANGE : HIRES_GREEN, i);
+            break;
+          }
+          default:
+            break;
         }
-        case "1,0": {
-          const offset = offsets.get(Math.floor((i+1)/7));
-          this.drawRect(offset ? HIRES_ORANGE : HIRES_GREEN, i);
-          break;
-        }
-        case "1,1": {
-          this.drawRect(HIRES_WHITE, i, 2);
-          break;
-        }
-        default:
-          break;
       }
     }
   }
