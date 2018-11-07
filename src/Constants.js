@@ -6,8 +6,8 @@ export const HIRES_HEIGHT = 192;
 export const HIRES_VIOLET = "#FF00FF";
 export const HIRES_GREEN = "#00FF00";
 export const HIRES_WHITE = "#FFFFFF";
-export const HIRES_BLUE = "#0055FF";
-export const HIRES_ORANGE = "#FF5500";
+export const HIRES_BLUE = "#00AAFF";
+export const HIRES_ORANGE = "#FFAA00";
 export const MONO = "#00DD00";
 
 export const Colors = KeyMirror([

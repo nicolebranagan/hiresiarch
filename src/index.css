@@ -17,3 +17,45 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+.colors input[type=radio] {
+  display: none;
+}
+
+.colors label {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background-color: #000;
+  border-style: solid;
+  border-width: thin;
+  border-color: #999;
+}
+
+.colors input[type=radio]:checked+label {
+  border-color: #000;
+}
+
+.colors .VIOLET {
+  background-color: #FF00FF;
+}
+
+.colors .GREEN {
+  background-color: #00FF00;
+}
+
+.colors .WHITE {
+  background-color: #FFF;
+}
+
+.colors .BLUE {
+  background-color: #00aaFF;
+}
+
+.colors .ORANGE {
+  background-color: #FFAA00;
+}
+
+.colors .BLACK {
+  background-color: #000;
+}
