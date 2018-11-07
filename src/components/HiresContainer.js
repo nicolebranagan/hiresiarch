@@ -21,6 +21,7 @@ export default class HiresContainer extends PureComponent {
       dragging: false,
       startx: 0,
       starty: 0,
+      drawingmult: 2,
     };
   }
 
@@ -50,8 +51,9 @@ export default class HiresContainer extends PureComponent {
   }
 
   setXY = (y, x) => {
-    const startx = ((x / 7) | 0) * 7;
-    const starty = ((y / 8) | 0) * 8;
+    const { drawingmult } = this.state;
+    const startx = ((x / (7*drawingmult)) | 0) * 7*drawingmult;
+    const starty = ((y / (8*drawingmult)) | 0) * 8*drawingmult;
 
     this.setState({startx, starty});
   }
@@ -90,7 +92,7 @@ export default class HiresContainer extends PureComponent {
   }
 
   render() {
-    const { data, color, dragging, startx, starty, selectedColor } = this.state;
+    const { data, color, dragging, startx, starty, selectedColor, drawingmult } = this.state;
 
     return (
       <div>
@@ -104,20 +106,24 @@ export default class HiresContainer extends PureComponent {
           x={startx} 
           y={starty} 
           setXY={this.setXY} 
+          drawingmult={drawingmult}
         />
         <DrawingBox 
           data={data} 
           color={color} 
           dragging={dragging} 
           startx={startx} 
-          starty={starty} 
+          starty={starty}
+          drawingmult={drawingmult}
           drawSelectedColor={this.drawSelectedColor} 
         />
         <ControlRow
           color={color}
           selectedColor={selectedColor}
+          drawingmult={drawingmult}
           setSelectedColor={selectedColor => this.setState({selectedColor})}
           onToggleColor={this.onToggleColor}
+          setDrawingmult={({target: { value }}) => this.setState({drawingmult: value})}
         />
       </div>
     );

@@ -4,12 +4,17 @@ import { COLOR_COLORS, MONO_COLORS } from '../Constants';
 export default ({ 
   color, 
   selectedColor,
+  drawingmult,
   setSelectedColor,
-  onToggleColor
+  onToggleColor,
+  setDrawingmult,
 }) => {
   const map = color ? COLOR_COLORS : MONO_COLORS;
   return (
-    <div style={{width: '100%', textAlign: 'left'}}>
+    <center>
+      <div style={{display: 'inline-block'}}>
+        <input type="range" min={1} max={8} value={drawingmult} onChange={setDrawingmult} />
+      </div>
       <div style={{display: 'inline-block'}}>
         Color/Mono: <input type="checkbox" checked={color} onChange={onToggleColor} />
       </div>
@@ -25,6 +30,6 @@ export default ({
           {color}
         </span>)}
       </div>
-    </div>
+    </center>
   );
 }

@@ -8,17 +8,18 @@ export default ({
   drawSelectedColor,
   startx,
   starty,
+  drawingmult,
 }) => {
   return (
     <div style={{display: 'inline-block', paddingLeft: '2px'}}>
-      {[...Array(8).keys()].map(row => (
+      {[...Array(8*drawingmult).keys()].map(row => (
         <HiresRow
           key={row}
           data={data.get(starty+row)}
           start={startx}
-          width={7}
+          width={drawingmult*7}
           onClick={column => drawSelectedColor(starty+row, startx+column)}
-          scale={48}
+          scale={48 / drawingmult}
           color={color}
           dragging={dragging}
         />
