@@ -6,6 +6,7 @@ import SelectorBox from './SelectorBox';
 import DrawingBox from './DrawingBox';
 import ControlRow from './ControlRow';
 import SaveScreenData from '../utils/SaveScreenData';
+import LoadScreenData from '../utils/LoadScreenData';
 
 export default class HiresContainer extends PureComponent {
   constructor(props) {
@@ -41,6 +42,15 @@ export default class HiresContainer extends PureComponent {
 
   onMouseUp = () => {
     this.setState({dragging: false});
+  }
+
+  onLoad = (e) => {
+    const file = e.target.files.item(0);
+    const fileReader = new FileReader();
+    fileReader.onload = e => {
+      this.setState({data: LoadScreenData(e.target.result)})
+    };
+    fileReader.readAsText(file);
   }
 
   onToggleColor = (event) => {
@@ -98,6 +108,10 @@ export default class HiresContainer extends PureComponent {
       <div>
         <div>
           <button onClick={() => {SaveScreenData(data)}}>Save</button>
+          <input type="file"
+            id="openFile" name="file"
+            accept=".dat" onChange={this.onLoad}/>
+
         </div>
         <SelectorBox 
           data={data} 
