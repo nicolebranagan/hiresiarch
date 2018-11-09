@@ -1,6 +1,16 @@
 import saveAs from 'file-saver';
 import { HIRES_OFFSETS } from '../Constants';
 
+const byteize = grandArray => {
+  let grandOutput = '';
+  for (let i = 0; i < (grandArray.length / 16); i++) {
+    const subset = grandArray.slice(i*16, (i+1)*16);
+    const dataString = ".byte " + subset.map(num => `$${num.toString(16)}`).join(', ') + '\n';
+    grandOutput += dataString;
+  }
+  return grandOutput;
+};
+
 export default data => {
   const rawRows = data.map(({pixels, offsets}) => {
     const output = [];
@@ -21,11 +31,6 @@ export default data => {
     }
   }
 
-  let grandOutput = '';
-  for (let i = 0; i < (grandArray.length / 16); i++) {
-    const subset = grandArray.slice(i*16, (i+1)*16);
-    const dataString = ".byte " + subset.map(num => `$${num.toString(16)}`).join(', ') + '\n';
-    grandOutput += dataString;
-  }
+  const grandOutput = byteize(grandArray);
   saveAs(new Blob([grandOutput], {type: 'application/octet-stream'}), "screen.dat");
 };
