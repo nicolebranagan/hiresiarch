@@ -20,17 +20,17 @@ export const Colors = KeyMirror([
 ])
 
 export const COLOR_COLORS = [
+  Colors.BLACK,
   Colors.WHITE,
   Colors.VIOLET,
   Colors.GREEN,
   Colors.BLUE,
   Colors.ORANGE,
-  Colors.BLACK
 ];
 
 export const MONO_COLORS = [
+  Colors.BLACK,
   Colors.WHITE,
-  Colors.BLACK
 ];
 
 export const ColorCodes = {

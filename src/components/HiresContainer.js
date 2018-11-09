@@ -7,6 +7,7 @@ import DrawingBox from './DrawingBox';
 import ControlRow from './ControlRow';
 import SaveScreenData from '../utils/SaveScreenData';
 import LoadScreenData from '../utils/LoadScreenData';
+import ColorPalette from './ColorPalette';
 
 export default class HiresContainer extends PureComponent {
   constructor(props) {
@@ -192,11 +193,14 @@ export default class HiresContainer extends PureComponent {
           drawingmult={drawingmult}
           drawSelectedColor={this.drawSelectedColor} 
         />
-        <ControlRow
+        <ColorPalette
           color={color}
           selectedColor={selectedColor}
-          drawingmult={drawingmult}
           setSelectedColor={selectedColor => this.setState({selectedColor})}
+        />
+        <ControlRow
+          color={color}
+          drawingmult={drawingmult}
           onToggleColor={this.onToggleColor}
           setDrawingmult={({target: { value }}) => this.setState({drawingmult: value})}
         />
