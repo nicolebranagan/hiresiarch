@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { fromJS, List } from 'immutable';
 import { HIRES_WIDTH, HIRES_BYTE_WIDTH, HIRES_HEIGHT, Colors, ColorCodes } from '../Constants';
-import { HiresRowRecord } from '../Records';
+import { HiresRowRecord, CopyDataRecord } from '../Records';
 import SelectorBox from './SelectorBox';
 import DrawingBox from './DrawingBox';
 import ControlRow from './ControlRow';
@@ -23,6 +23,7 @@ export default class HiresContainer extends PureComponent {
       startx: 0,
       starty: 0,
       drawingmult: 2,
+      copy: null,
     };
   }
 
@@ -51,6 +52,37 @@ export default class HiresContainer extends PureComponent {
       this.setState({data: LoadScreenData(e.target.result)})
     };
     fileReader.readAsText(file);
+  }
+
+  onCopy = () => {
+    const { data, startx, starty, drawingmult } = this.state;
+
+    const rowsToCopy = drawingmult * 8;
+    const colsToCopy = drawingmult * 7;
+
+    const copy = CopyDataRecord({
+      rows: data.slice(starty, starty+rowsToCopy),
+      x: startx,
+      width: colsToCopy
+    });
+    this.setState({copy});
+  }
+
+  onPaste = () => {
+    const { data, startx, starty, copy: { rows, x, width } } = this.state;
+    let newData = data;
+    for (let j = 0; j < rows.size; j++) {
+      const { pixels, offsets } = data.get(starty + j);
+      const newOffsets = offsets.splice(startx / 7, width / 7, ...(rows.get(j).offsets.slice(x/7, (x+width)/7).toArray()));
+      const newPixels = pixels.splice(startx, width, ...(rows.get(j).pixels.slice(x, (x+width)).toArray()));
+
+      const newRowData = new HiresRowRecord({
+        pixels: newPixels,
+        offsets: newOffsets,
+      });
+      newData = newData.set(starty + j, newRowData);
+    }
+    this.setState({data: newData});
   }
 
   onToggleColor = (event) => {
@@ -107,11 +139,12 @@ export default class HiresContainer extends PureComponent {
     return (
       <div>
         <div>
+          <button onClick={this.onCopy}>Copy</button>
+          <button onClick={this.onPaste}>Paste</button>
           <button onClick={() => {SaveScreenData(data)}}>Save</button>
           <input type="file"
             id="openFile" name="file"
             accept=".dat" onChange={this.onLoad}/>
-
         </div>
         <SelectorBox 
           data={data} 
