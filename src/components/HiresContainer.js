@@ -30,11 +30,13 @@ export default class HiresContainer extends PureComponent {
   componentDidMount() {
     document.addEventListener('mousedown', this.onMouseDown);
     document.addEventListener('mouseup', this.onMouseUp);
+    document.addEventListener('keydown', this.onKeyDown);
   }
 
   componentWillUnmount() {
     document.removeEventListener('mousedown', this.onMouseDown);
     document.removeEventListener('mouseup', this.onMouseUp);
+    document.removeEventListener('keydown', this.onKeyDown);
   }
 
   onMouseDown = () => {
@@ -43,6 +45,32 @@ export default class HiresContainer extends PureComponent {
 
   onMouseUp = () => {
     this.setState({dragging: false});
+  }
+
+  onKeyDown = (e) => {
+    const ctrlKey = e.ctrlKey || e.metaKey;
+    const { drawingmult, starty, startx } = this.state;
+    if (e.key === 'c' && ctrlKey) {
+      this.onCopy();
+    } else if (e.key === 'v' && ctrlKey) {
+      this.onPaste();
+    } else if (e.key === 'ArrowUp') {
+      this.setState({
+        starty: Math.max(starty - drawingmult * 8, 0)
+      });
+    } else if (e.key === 'ArrowDown') {
+      this.setState({
+        starty: Math.min(starty + drawingmult * 8, HIRES_HEIGHT - drawingmult*8)
+      });
+    } else if (e.key === 'ArrowLeft') {
+      this.setState({
+        startx: Math.max(startx - drawingmult * 7, 0)
+      });
+    } else if (e.key === 'ArrowRight') {
+      this.setState({
+        startx: Math.min(startx + drawingmult * 7, HIRES_WIDTH - drawingmult*7)
+      });
+    }
   }
 
   onLoad = (e) => {
