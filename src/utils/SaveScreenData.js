@@ -1,6 +1,16 @@
 import saveAs from 'file-saver';
 import { HIRES_OFFSETS } from '../Constants';
 
+const rowToBytes = ({pixels, offsets}) => {
+  const output = [];
+  for (let i = 0; i < offsets.size; i++) {
+    const outputByte = offsets.get(i) ? 1 : 0;
+    const pixelBytes = pixels.slice(i*7, (i+1)*7).reverse().toArray();
+    output.push(parseInt([outputByte, ...pixelBytes].join(''), 2));
+  }
+  return output;
+};
+
 const byteize = grandArray => {
   let grandOutput = '';
   for (let i = 0; i < (grandArray.length / 16); i++) {
@@ -12,15 +22,7 @@ const byteize = grandArray => {
 };
 
 export default data => {
-  const rawRows = data.map(({pixels, offsets}) => {
-    const output = [];
-    for (let i = 0; i < offsets.size; i++) {
-      const outputByte = offsets.get(i) ? 1 : 0;
-      const pixelBytes = pixels.slice(i*7, (i+1)*7).reverse().toArray();
-      output.push(parseInt([outputByte, ...pixelBytes].join(''), 2));
-    }
-    return output;
-  }).toArray();
+  const rawRows = data.map(rowToBytes).toArray();
 
   const grandArray = Array(8192).fill(9);
   for (let i = 0; i < 192; i++) {
@@ -33,4 +35,10 @@ export default data => {
 
   const grandOutput = byteize(grandArray);
   saveAs(new Blob([grandOutput], {type: 'application/octet-stream'}), "screen.dat");
+};
+
+export const SaveCopyArea = copy => {
+  const { rows, x, width } = copy;
+  const rawRows = rows.map(rowToBytes).map(row => row.slice((x/7), (x + width)/7)).toArray().flat();
+  return byteize(rawRows);
 };

@@ -5,7 +5,7 @@ import { HiresRowRecord, CopyDataRecord } from '../Records';
 import SelectorBox from './SelectorBox';
 import DrawingBox from './DrawingBox';
 import ControlRow from './ControlRow';
-import SaveScreenData from '../utils/SaveScreenData';
+import SaveScreenData, { SaveCopyArea } from '../utils/SaveScreenData';
 import LoadScreenData from '../utils/LoadScreenData';
 import ColorPalette from './ColorPalette';
 
@@ -114,6 +114,22 @@ export default class HiresContainer extends PureComponent {
     this.setState({data: newData});
   }
 
+  onSaveToClipboard = () => {
+    const { data, startx, starty, drawingmult } = this.state;
+
+    const rowsToCopy = drawingmult * 8;
+    const colsToCopy = drawingmult * 7;
+
+    const copy = CopyDataRecord({
+      rows: data.slice(starty, starty+rowsToCopy),
+      x: startx,
+      width: colsToCopy
+    });
+
+    const copybytes = SaveCopyArea(copy);
+    navigator.clipboard.writeText(copybytes).then(() => console.log('success!')).catch(err => console.log(err))
+  }
+
   onToggleColor = (event) => {
     this.setState({
       color: event.target.checked,
@@ -174,6 +190,7 @@ export default class HiresContainer extends PureComponent {
           <input type="file"
             id="openFile" name="file"
             accept=".dat" onChange={this.onLoad}/>
+          <button onClick={this.onSaveToClipboard}>Save Selection To Clipboard</button>
         </div>
         <SelectorBox 
           data={data} 
