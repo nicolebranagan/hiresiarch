@@ -9,6 +9,7 @@ import SaveScreenData, { SaveCopyArea } from '../utils/SaveScreenData';
 import LoadScreenData from '../utils/LoadScreenData';
 import ColorPalette from './ColorPalette';
 import SaveModal from './SaveModal';
+import LoadModal from './LoadModal';
 
 export default class HiresContainer extends PureComponent {
   constructor(props) {
@@ -73,6 +74,10 @@ export default class HiresContainer extends PureComponent {
         startx: Math.min(startx + drawingmult * 7, HIRES_WIDTH - drawingmult*7)
       });
     }
+  }
+
+  importData = (data) => {
+    this.setState({data});
   }
 
   onLoad = (e) => {
@@ -188,6 +193,7 @@ export default class HiresContainer extends PureComponent {
           <button onClick={this.onCopy}>Copy</button>
           <button onClick={this.onPaste}>Paste</button>
           <SaveModal data={data} />
+          <LoadModal onLoad={this.importData} />
           <button onClick={() => {SaveScreenData(data)}}>Export Screen</button>
           <input type="file"
             id="openFile" name="file"
