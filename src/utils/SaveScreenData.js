@@ -40,5 +40,5 @@ export default data => {
 export const SaveCopyArea = copy => {
   const { rows, x, width } = copy;
   const rawRows = rows.map(rowToBytes).map(row => row.slice((x/7), (x + width)/7)).toArray().flat();
-  return byteize(rawRows);
+  return `; width: ${width/7} height: ${rows.size}\n`+byteize(rawRows);
 };
