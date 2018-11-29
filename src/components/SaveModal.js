@@ -1,7 +1,14 @@
 import React, { PureComponent } from 'react';
+import PropTypes from 'prop-types';
+import { List } from 'immutable';
 import ModalHOC from './modal/ModalHOC';
+import { isFilenameValid, save } from '../utils/LocalStorageUtils';
 
 class SaveModal extends PureComponent {
+  static propTypes = {
+    data: PropTypes.instanceOf(List).isRequired,
+  }
+
   constructor(props) {
     super(props);
 
@@ -12,6 +19,12 @@ class SaveModal extends PureComponent {
 
   setFilename = (e) => {
     this.setState({fileName: e.target.value});
+  }
+
+  onSave = () => {
+    const { data, onCloseModal } = this.props;
+    const { fileName } = this.state;
+    save(fileName, data).then(onCloseModal).catch(e => alert(e));
   }
 
   render() {
@@ -25,7 +38,12 @@ class SaveModal extends PureComponent {
           onChange={this.setFilename}
         />
         <div>
-        <button disabled={fileName === ''}>Save</button>
+        <button 
+          disabled={!isFilenameValid(fileName)} 
+          onClick={this.onSave} 
+        >
+          Save
+        </button>
         <button onClick={this.props.onCloseModal}>Cancel</button>
         </div>
       </div>

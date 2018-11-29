@@ -187,7 +187,7 @@ export default class HiresContainer extends PureComponent {
         <div>
           <button onClick={this.onCopy}>Copy</button>
           <button onClick={this.onPaste}>Paste</button>
-          <SaveModal />
+          <SaveModal data={data} />
           <button onClick={() => {SaveScreenData(data)}}>Export Screen</button>
           <input type="file"
             id="openFile" name="file"
