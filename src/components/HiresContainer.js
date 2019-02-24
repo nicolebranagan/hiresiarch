@@ -10,6 +10,7 @@ import LoadScreenData from '../utils/LoadScreenData';
 import ColorPalette from './ColorPalette';
 import SaveModal from './SaveModal';
 import LoadModal from './LoadModal';
+import { getAllSavedData, loadAllSavedData } from '../utils/LocalStorageUtils';
 
 export default class HiresContainer extends PureComponent {
   constructor(props) {
@@ -136,6 +137,17 @@ export default class HiresContainer extends PureComponent {
     navigator.clipboard.writeText(copybytes).then(() => console.log('success!')).catch(err => console.log(err))
   }
 
+  onExportAll = () => {
+    getAllSavedData().then(data => console.log(data))
+  }
+
+  onImportAll = (e) => {
+    const file = e.target.files.item(0);
+    const fileReader = new FileReader();
+    fileReader.onload = e => loadAllSavedData(e.target.result).then(() => console.log("Imported all!"));
+    fileReader.readAsText(file);
+  }
+
   onToggleColor = (event) => {
     this.setState({
       color: event.target.checked,
@@ -195,10 +207,16 @@ export default class HiresContainer extends PureComponent {
           <SaveModal data={data} />
           <LoadModal onLoad={this.importData} />
           <button onClick={() => {SaveScreenData(data)}}>Export Screen</button>
-          <input type="file"
+          <input type="file" className="inputfile"
             id="openFile" name="file"
             accept=".dat" onChange={this.onLoad}/>
+          <button><label htmlFor="openFile">Import Screen</label></button>
           <button onClick={this.onSaveToClipboard}>Export Selection To Clipboard</button>
+          <button onClick={this.onExportAll}>Export all data</button>
+          <input type="file" className="inputfile"
+            id="importAll" name="file"
+            accept=".data" onChange={this.onImportAll}/>
+          <button><label htmlFor="importAll">Import all data</label></button>
         </div>
         <SelectorBox 
           data={data} 
